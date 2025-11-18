@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cuenta regresiva — Llegada de tu esposa (11:00, España)</title>
+  <title>Cuenta regresiva — Llegada de tu esposa (22 nov 2025, 11:00 CET)</title>
   <style>
     :root{--bg:#0f1724;--card:#0b1220;--accent:#7dd3fc;--muted:#9ca3af}
     html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
@@ -13,7 +13,7 @@
     p.lead{margin:0 0 18px;color:var(--muted)}
     .counter{display:flex;gap:12px;justify-content:center;align-items:stretch}
     .segment{background:rgba(255,255,255,0.03);padding:18px 20px;border-radius:12px;min-width:110px}
-    .num{font-size:48px;font-weight:800;line-height:1;color:var(--accent);}
+    .num{font-size:48px;font-weight:800;line-height:1;color:var(--accent);}    
     .label{font-size:14px;color:var(--muted);margin-top:6px}
     .big{font-size:110px}
     .status{margin-top:14px;color:var(--muted)}
@@ -23,8 +23,8 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>Cuenta — llegada a las <strong>11:00</strong> (zona: Europe/Madrid)</h1>
-    <p class="lead">La página usa la hora actual en la zona horaria de España (Europe/Madrid) para mostrar cuánto falta o cuánto ha pasado desde las 11:00.</p>
+    <h1>Cuenta — llegada prevista: <strong>22 nov 2025 · 11:00</strong> (Europe/Madrid)</h1>
+    <p class="lead">Esta página muestra el tiempo restante hasta la llegada (o el tiempo transcurrido desde ella). La hora objetivo está fijada en 22/11/2025 11:00 (hora de España).</p>
 
     <div id="display" style="margin:22px 0">
       <div class="counter" id="countDown">
@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <div class="small-note">La cuenta está sincronizada con la hora actual del navegador pero convertida a la zona <strong>Europe/Madrid</strong>. Si tu navegador tiene la hora incorrecta, los valores pueden variar.</div>
+    <div class="small-note">La cuenta usa la hora del navegador convertida a la zona <strong>Europe/Madrid</strong>. Si la hora del dispositivo está mal, los cálculos también lo estarán.</div>
   </div>
 
   <script>
@@ -74,29 +74,39 @@
     function tzOffsetMs(now = new Date()){
       const p = madridPartsFor(now);
       const assumedUtcMs = Date.UTC(p.year, p.month-1, p.day, p.hour, p.minute, p.second);
-      return now.getTime() - assumedUtcMs;
+      return now.getTime() - assumedUtcMs; // ms to add to Madrid-wall-time UTC-millis to get actual instant
     }
 
     // Build target Madrid datetime → return UTC timestamp
     function madridTargetUtcMs(year, month, day, hour=11, minute=0, second=0){
       const assumedUtcMs = Date.UTC(year, month-1, day, hour, minute, second);
-      return assumedUtcMs + tzOffsetMs(new Date());
+      // use tz offset computed for the target date to handle DST correctly
+      const targetDateForOffset = new Date(assumedUtcMs);
+      const offset = tzOffsetMs(targetDateForOffset);
+      return assumedUtcMs + offset;
     }
 
+    function pad(n){return String(n).padStart(2,'0');}
+
+    function msToParts(ms){
+      const totalSeconds = Math.floor(ms/1000);
+      const seconds = Math.abs(totalSeconds % 60);
+      const totalMinutes = Math.floor(Math.abs(totalSeconds)/60);
+      const minutes = totalMinutes % 60;
+      const totalHours = Math.floor(totalMinutes/60);
+      const hours = totalHours % 24;
+      const days = Math.floor(totalHours/24);
+      return {days, hours, minutes, seconds};
+    }
+
+    // TARGET: 22 Nov 2025 11:00 Europe/Madrid
     const TARGET = { year: 2025, month: 11, day: 22, hour: 11, minute: 0, second: 0 };
-    const targetUtcTs = madridTargetUtcMs(
-      TARGET.year, TARGET.month, TARGET.day,
-      TARGET.hour, TARGET.minute, TARGET.second
-    );
+    const targetUtcTs = madridTargetUtcMs(TARGET.year, TARGET.month, TARGET.day, TARGET.hour, TARGET.minute, TARGET.second);
 
-    function update(){(){
+    function update() {
       const now = new Date();
-      const p = madridPartsFor(now);
-      // today's 11:00
-      const todayTarget = madridTargetUtcMs(p.year, p.month, p.day, 11,0,0);
       const nowMs = now.getTime();
-
-      let diff = todayTarget - nowMs; // ms until today's 11:00 (negative if passed)
+      let diff = targetUtcTs - nowMs; // positive -> time remaining, negative -> already passed
 
       const daysEl = document.getElementById('days');
       const hoursEl = document.getElementById('hours');
@@ -106,53 +116,30 @@
       const statusLine = document.getElementById('statusLine');
 
       if(diff >= 0){
-        // countdown to today's 11:00
         const t = msToParts(diff);
         daysEl.textContent = t.days;
         hoursEl.textContent = pad(t.hours);
         minutesEl.textContent = pad(t.minutes);
         secondsEl.textContent = pad(t.seconds);
-        mainBig.textContent = `${t.hours+ t.days*24}:${pad(t.minutes)}:${pad(t.seconds)}`;
-        statusLine.textContent = `Faltan ${t.days}d ${t.hours}h ${t.minutes}m ${t.seconds}s para las 11:00 (hora de España).`;
+        const totalHours = t.hours + t.days * 24;
+        mainBig.textContent = `${totalHours}:${pad(t.minutes)}:${pad(t.seconds)}`;
+        statusLine.textContent = `Faltan ${t.days}d ${t.hours}h ${t.minutes}m ${t.seconds}s para las 11:00 (22/11/2025, hora de España).`;
       } else {
-        // already passed today 11:00 -> show elapsed since arrival and also next day's countdown in smaller way
-        const elapsedMs = -diff;
-        const e = msToParts(elapsedMs);
+        // already passed
+        const e = msToParts(-diff);
         daysEl.textContent = e.days;
         hoursEl.textContent = pad(e.hours);
         minutesEl.textContent = pad(e.minutes);
         secondsEl.textContent = pad(e.seconds);
-        mainBig.textContent = `+${e.hours + e.days*24}:${pad(e.minutes)}:${pad(e.seconds)}`;
-        // countdown to next day's 11:00
-        const tomorrowTarget = madridTargetUtcMs(p.year, p.month, p.day+1, 11,0,0);
-        const toTomorrow = Math.max(0, tomorrowTarget - nowMs);
-        const t2 = msToParts(toTomorrow);
-        statusLine.textContent = `Llegó hace ${e.days}d ${e.hours}h ${e.minutes}m ${e.seconds}s. Próxima 11:00 en ${t2.days}d ${t2.hours}h ${t2.minutes}m ${t2.seconds}s.`;
+        const totalHours = e.hours + e.days * 24;
+        mainBig.textContent = `+${totalHours}:${pad(e.minutes)}:${pad(e.seconds)}`;
+        statusLine.textContent = `Llegó hace ${e.days}d ${e.hours}h ${e.minutes}m ${e.seconds}s.`;
       }
-    }
-
-    function msToParts(ms){
-      const totalSeconds = Math.floor(ms/1000);
-      const seconds = totalSeconds % 60;
-      const totalMinutes = Math.floor(totalSeconds/60);
-      const minutes = totalMinutes % 60;
-      const totalHours = Math.floor(totalMinutes/60);
-      const hours = totalHours % 24;
-      const days = Math.floor(totalHours/24);
-      return {days, hours, minutes, seconds};
     }
 
     // Start updates
     update();
     setInterval(update, 200);
-
-    // show current Madrid wall-time for clarity in console (optional)
-    setInterval(()=>{
-      const p = madridPartsFor(new Date());
-      // e.g. 2025-11-18 11:00:00
-      // no UI element needed, but could be enabled for debug
-      // console.log('Madrid now', `${p.year}-${p.month}-${p.day} ${p.hour}:${p.minute}:${p.second}`);
-    },10000);
   </script>
 </body>
 </html>
