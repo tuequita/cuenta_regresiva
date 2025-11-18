@@ -123,7 +123,7 @@
         secondsEl.textContent = pad(t.seconds);
         const totalHours = t.hours + t.days * 24;
         mainBig.textContent = `${totalHours}:${pad(t.minutes)}:${pad(t.seconds)}`;
-        statusLine.textContent = `Faltan ${t.days}d ${t.hours}h ${t.minutes}m ${t.seconds}s para las 11:00 (22/11/2025, hora de España).`;
+        statusLine.textContent = `Faltan ${t.days}d ${t.hours}h ${t.minutes}m ${t.seconds}s para las 10h40 (22/11/2025, hora de España).`;
       } else {
         // already passed
         const e = msToParts(-diff);
