@@ -74,18 +74,22 @@
     function tzOffsetMs(now = new Date()){
       const p = madridPartsFor(now);
       const assumedUtcMs = Date.UTC(p.year, p.month-1, p.day, p.hour, p.minute, p.second);
-      return now.getTime() - assumedUtcMs; // ms to add to a Madrid-wall-time UTC-millis to get actual instant
+      return now.getTime() - assumedUtcMs;
     }
 
-    // Build target 11:00 for a given Madrid date (year,month,day) and return the UTC timestamp (ms)
+    // Build target Madrid datetime → return UTC timestamp
     function madridTargetUtcMs(year, month, day, hour=11, minute=0, second=0){
       const assumedUtcMs = Date.UTC(year, month-1, day, hour, minute, second);
       return assumedUtcMs + tzOffsetMs(new Date());
     }
 
-    function pad(n){return String(n).padStart(2,'0');}
+    const TARGET = { year: 2025, month: 11, day: 22, hour: 11, minute: 0, second: 0 };
+    const targetUtcTs = madridTargetUtcMs(
+      TARGET.year, TARGET.month, TARGET.day,
+      TARGET.hour, TARGET.minute, TARGET.second
+    );
 
-    function update(){
+    function update(){(){
       const now = new Date();
       const p = madridPartsFor(now);
       // today's 11:00
