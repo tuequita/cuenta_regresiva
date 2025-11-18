@@ -23,8 +23,8 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>Cuenta — llegada prevista: <strong>22 nov 2025 · 11:00</strong> (Europe/Madrid)</h1>
-    <p class="lead">Esta página muestra el tiempo restante hasta la llegada (o el tiempo transcurrido desde ella). La hora objetivo está fijada en 22/11/2025 11:00 (hora de España).</p>
+    <h1>Cuenta — llegada prevista: <strong>22 nov 2025 · 11:00</strong> de Claudia a Barcelona</h1>
+    <p class="lead">Esta página muestra el tiempo restante hasta la llegada (o el tiempo transcurrido desde ella). La hora objetivo está fijada en 22/11/2025, Sabado 10h00 (hora de España).</p>
 
     <div id="display" style="margin:22px 0">
       <div class="counter" id="countDown">
@@ -100,7 +100,7 @@
     }
 
     // TARGET: 22 Nov 2025 11:00 Europe/Madrid
-    const TARGET = { year: 2025, month: 11, day: 22, hour: 11, minute: 0, second: 0 };
+    const TARGET = { year: 2025, month: 11, day: 22, hour: 10, minute: 40, second: 0 };
     const targetUtcTs = madridTargetUtcMs(TARGET.year, TARGET.month, TARGET.day, TARGET.hour, TARGET.minute, TARGET.second);
 
     function update() {
