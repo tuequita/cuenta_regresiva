@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <div class="small-note">La cuenta usa la hora del navegador convertida a la zona <strong>Europe/Madrid</strong>. Si la hora del dispositivo está mal, los cálculos también lo estarán.</div>
+    <div class="small-note">La cuenta usa la hora del navegador convertida a la zona <strong>Americas/LaPaz</strong>. Si la hora del dispositivo está mal, los cálculos también lo estarán.</div>
   </div>
 
   <script>
@@ -99,8 +99,8 @@
       return {days, hours, minutes, seconds};
     }
 
-    // TARGET: 22 Nov 2025 11:00 Europe/Madrid
-    const TARGET = { year: 2025, month: 11, day: 22, hour: 10, minute: 40, second: 0 };
+    // TARGET: 03 Jun 2026 02:30 America/La_Paz
+    const TARGET = { year: 2026, month: 6, day: 3, hour: 2, minute: 30, second: 0 };
     const targetUtcTs = madridTargetUtcMs(TARGET.year, TARGET.month, TARGET.day, TARGET.hour, TARGET.minute, TARGET.second);
 
     function update() {
@@ -133,7 +133,7 @@
         secondsEl.textContent = pad(e.seconds);
         const totalHours = e.hours + e.days * 24;
         mainBig.textContent = `+${totalHours}:${pad(e.minutes)}:${pad(e.seconds)}`;
-        statusLine.textContent = `Llegó hace ${e.days}d ${e.hours}h ${e.minutes}m ${e.seconds}s.`;
+        statusLine.textContent = `${e.days}d ${e.hours}h ${e.minutes}m ${e.seconds}s. para llegar a Bolivia`;
       }
     }
 
