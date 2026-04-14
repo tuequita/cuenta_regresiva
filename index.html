@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cuenta regresiva — Llegada de tu esposa (22 nov 2025, 11:00 CET)</title>
+  <title>Cuenta regresiva — papa en Bolivia (22 nov 2025, 11:00 CET)</title>
   <style>
     :root{--bg:#0f1724;--card:#0b1220;--accent:#7dd3fc;--muted:#9ca3af}
     html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
@@ -23,8 +23,8 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>Cuenta — llegada prevista: <strong>22 nov 2025 · 10h40</strong> de Claudia a Barcelona</h1>
-    <p class="lead">Esta página muestra el tiempo restante hasta la llegada (o el tiempo transcurrido desde ella). La hora objetivo está fijada en 22/11/2025, Sabado 10h40 (hora de España).</p>
+    <h1>Cuenta — llegada prevista: <strong>22 nov 2025 · 10h40</strong> de Papa a Cbba</h1>
+    <p class="lead">Esta página muestra el tiempo restante hasta la llegada (o el tiempo transcurrido desde ella). La hora objetivo está fijada en 03/06/2025, Miercoles 02h30 (hora de Bolivia).</p>
 
     <div id="display" style="margin:22px 0">
       <div class="counter" id="countDown">
@@ -59,7 +59,7 @@
     // Utility: get date/time parts for a given instant in Europe/Madrid
     function madridPartsFor(date = new Date()){
       const fmt = new Intl.DateTimeFormat('en-GB',{
-        timeZone: 'Europe/Madrid',
+        timeZone: 'America/La_Paz',
         year: 'numeric', month: 'numeric', day: 'numeric',
         hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false
       });
@@ -123,7 +123,7 @@
         secondsEl.textContent = pad(t.seconds);
         const totalHours = t.hours + t.days * 24;
         mainBig.textContent = `${totalHours}:${pad(t.minutes)}:${pad(t.seconds)}`;
-        statusLine.textContent = `Faltan ${t.days}d ${t.hours}h ${t.minutes}m ${t.seconds}s para las 10h40 (22/11/2025, hora de España).`;
+        statusLine.textContent = `Faltan ${t.days}d ${t.hours}h ${t.minutes}m ${t.seconds}s para las 02h30 (03/06/2025, hora de Bolivia).`;
       } else {
         // already passed
         const e = msToParts(-diff);
